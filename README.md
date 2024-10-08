@@ -60,3 +60,28 @@ Running Events will be done locally.
 
 `:SendToServer(id : string, ...)`<br/>
 Sends a message to the Server to run an Event on its side.
+
+# Examples
+## Server-side Event
+```lua
+EventLinker:CreateEvent('ChangeColor','EVENT',function(ply, color)
+  if (not ply) then return end
+  assert(typeof(color) == 'Color3', '"color" argument is not a Color3.')
+  
+  workspace.Baseplate.Color = color
+  EventLinker:SendToClient('YouDidIt!',ply)
+end)
+```
+
+## Client-side Event
+```lua
+EventLinker:CreateEvent('YouDidIt!','EVENT',function(server)
+  if (not server) then return end
+  print 'I did it!'
+end)
+
+EventLinker:SendToServer('ChangeColor', Color3.new(math.random(),math.random(),math.random()))
+```
+
+## Sanity Checks
+The `ply` and `server` arguments are provided for Server- and Client-sided Events respectively in order to allow for Sanity Checks, as presented above.
